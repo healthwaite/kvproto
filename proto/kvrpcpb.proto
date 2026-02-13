@@ -954,6 +954,10 @@ message Context {
     // TODO(slock): tidb should send requests with a feature flag to indicate whether it
     // supports shared locks, so that tikv can fail the requests from old tidb versions
     // when needed.
+
+    // If true we'll delete `key` if current_val == `previous_value` when
+    // calling rawkv CompareAndSwap
+    bool raw_cas_delete = 38;
 }
 
 message ResourceControlContext {

@@ -56,6 +56,8 @@ service Tikv {
     rpc RawGetKeyTTL(kvrpcpb.RawGetKeyTTLRequest) returns (kvrpcpb.RawGetKeyTTLResponse) {}
     // Compare if the value in database equals to `RawCASRequest.previous_value` before putting the new value. If not, this request will have no effect and the value in the database will be returned.
     rpc RawCompareAndSwap(kvrpcpb.RawCASRequest) returns (kvrpcpb.RawCASResponse) {}
+    // Compare if the value in database equals to `RawCADRequest.previous_value` and delete the key if so.
+    rpc RawCompareAndDelete(kvrpcpb.RawCADRequest) returns (kvrpcpb.RawCADResponse) {}
     rpc RawChecksum(kvrpcpb.RawChecksumRequest) returns (kvrpcpb.RawChecksumResponse) {}
 
     // Store commands (sent to a each TiKV node in a cluster, rather than a certain region).
@@ -191,6 +193,12 @@ message BatchCommandsRequest {
             kvrpcpb.GetHealthFeedbackRequest GetHealthFeedback = 39;
 
             kvrpcpb.BroadcastTxnStatusRequest BroadcastTxnStatus = 40;
+
+            // Added by Akamai. We set the field ID to 233 to avoid clashes
+            // with future message types added by upstream.
+            kvrpcpb.RawCADRequest RawCompareAndDelete = 233;
+            kvrpcpb.RawCASRequest RawCompareAndSwap = 234;
+
             // For some test cases.
             BatchCommandsEmptyRequest Empty = 255;
         }
@@ -252,6 +260,11 @@ message BatchCommandsResponse {
             kvrpcpb.GetHealthFeedbackResponse GetHealthFeedback = 39;
             
             kvrpcpb.BroadcastTxnStatusResponse BroadcastTxnStatus = 40;
+
+            // Added by Akamai. We set the field ID to 233 to avoid clashes
+            // with future message types added by upstream.
+            kvrpcpb.RawCADResponse RawCompareAndDelete = 233;
+            kvrpcpb.RawCASResponse RawCompareAndSwap = 234;
 
             // For some test cases.
             BatchCommandsEmptyResponse Empty = 255;
